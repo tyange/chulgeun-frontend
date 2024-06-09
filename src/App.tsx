@@ -1,25 +1,55 @@
 import { useState } from "react";
 import { useInterval } from "usehooks-ts";
-import { formatISO, addSeconds } from "date-fns";
+import {
+  addHours,
+  intervalToDuration,
+  formatDuration,
+  differenceInSeconds,
+  addSeconds,
+} from "date-fns";
+import { ko } from "date-fns/locale";
 
-const INTERVAL_DELAY = 1000;
+const INTERVAL_DELAY = 0;
+const INITIAL_REMAINING_TIME_STRING = "9시간 00분 00초";
 
 function App() {
-  const [time, setTime] = useState<Date | null>(null);
+  const [workPauseAt, setWorkPauseAt] = useState<Date | null>(null);
+  const [workDoneAt, setWorkDoneAt] = useState<Date | null>(null);
+  const [remainingTimeString, setRemainingTimeString] = useState<string | null>(
+    INITIAL_REMAINING_TIME_STRING
+  );
   const [isPause, setIsPause] = useState<number | null>(null);
 
   useInterval(() => {
-    setTime((prevState) => {
-      if (!prevState) {
-        return null;
-      }
+    if (!workDoneAt) {
+      return;
+    }
 
-      return addSeconds(prevState, -1);
-    });
+    const diff = intervalToDuration({ start: new Date(), end: workDoneAt });
+
+    setRemainingTimeString(formatDuration(diff, { zero: true, locale: ko }));
   }, isPause);
 
   const pauseHandler = () => {
+    setWorkPauseAt(new Date());
     setIsPause(null);
+  };
+
+  const restartHandler = () => {
+    if (!workPauseAt) {
+      return;
+    }
+
+    const diffTime = differenceInSeconds(new Date(), workPauseAt);
+
+    setWorkDoneAt((prevWorkDoneAt) => {
+      if (!prevWorkDoneAt) {
+        throw new Error("Missing Work done at.");
+      }
+
+      return addSeconds(prevWorkDoneAt, diffTime);
+    });
+    setIsPause(INTERVAL_DELAY);
   };
 
   const workStartHandler = async () => {
@@ -28,14 +58,15 @@ function App() {
         method: "POST",
         mode: "cors",
         body: JSON.stringify({
-          start_at: formatISO(new Date()),
+          start_at: new Date().toISOString(),
           company_name: "kfc",
         }),
       });
 
       const data = await res.json();
+      const startAt = data.work["start_at"];
 
-      setTime(new Date(data.work["start_at"]));
+      setWorkDoneAt(addHours(new Date(startAt), 9));
       setIsPause(INTERVAL_DELAY);
     } catch (err) {
       console.log(err);
@@ -45,16 +76,20 @@ function App() {
   return (
     <>
       <div>
-        <p className="text-red-50">
-          {time ? time.toString() : "not start work"}
-        </p>
-        {isPause !== null ? (
-          <button className="btn btn-warning" onClick={pauseHandler}>
-            Pause
-          </button>
-        ) : (
+        <p className="text-red-50">{remainingTimeString}</p>
+        {workDoneAt === null && (
           <button className="btn btn-primary" onClick={workStartHandler}>
-            Work Start
+            업무 시작
+          </button>
+        )}
+        {workDoneAt && isPause === 0 && (
+          <button className="btn btn-warning" onClick={pauseHandler}>
+            멈춤
+          </button>
+        )}
+        {workDoneAt && isPause !== 0 && (
+          <button className="btn btn-info" onClick={restartHandler}>
+            재시작
           </button>
         )}
       </div>
