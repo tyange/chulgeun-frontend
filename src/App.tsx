@@ -1,24 +1,29 @@
-import { useState } from "react";
 import { useInterval } from "usehooks-ts";
 import {
   addHours,
   intervalToDuration,
   formatDuration,
   differenceInSeconds,
-  addSeconds,
 } from "date-fns";
 import { ko } from "date-fns/locale";
 
+import { useTimerStore } from "@/stores/useTimerStore";
+
 const INTERVAL_DELAY = 0;
-const INITIAL_REMAINING_TIME_STRING = "9시간 00분 00초";
 
 function App() {
-  const [workPauseAt, setWorkPauseAt] = useState<Date | null>(null);
-  const [workDoneAt, setWorkDoneAt] = useState<Date | null>(null);
-  const [remainingTimeString, setRemainingTimeString] = useState<string | null>(
-    INITIAL_REMAINING_TIME_STRING
-  );
-  const [isPause, setIsPause] = useState<number | null>(null);
+  const {
+    workDoneAt,
+    workPauseAt,
+    remainingTimeString,
+    isPause,
+    setWorkDoneAt,
+    addWorkDoneAt,
+    setWorkPauseAt,
+    setRemainingTimeString,
+    setPause,
+    reset,
+  } = useTimerStore();
 
   useInterval(() => {
     if (!workDoneAt) {
@@ -32,7 +37,7 @@ function App() {
 
   const pauseHandler = () => {
     setWorkPauseAt(new Date());
-    setIsPause(null);
+    setPause(null);
   };
 
   const restartHandler = () => {
@@ -41,15 +46,9 @@ function App() {
     }
 
     const diffTime = differenceInSeconds(new Date(), workPauseAt);
+    addWorkDoneAt(diffTime);
 
-    setWorkDoneAt((prevWorkDoneAt) => {
-      if (!prevWorkDoneAt) {
-        throw new Error("Missing Work done at.");
-      }
-
-      return addSeconds(prevWorkDoneAt, diffTime);
-    });
-    setIsPause(INTERVAL_DELAY);
+    setPause(INTERVAL_DELAY);
   };
 
   const workStartHandler = async () => {
@@ -67,7 +66,7 @@ function App() {
       const startAt = data.work["start_at"];
 
       setWorkDoneAt(addHours(new Date(startAt), 9));
-      setIsPause(INTERVAL_DELAY);
+      setPause(INTERVAL_DELAY);
     } catch (err) {
       console.log(err);
     }
@@ -92,6 +91,7 @@ function App() {
             재시작
           </button>
         )}
+        <button onClick={reset}>clean</button>
       </div>
     </>
   );
