@@ -35,6 +35,7 @@ export const useTimerStore = create<TimerState>()(
         if (!prevWorkDoneAt) {
           return;
         }
+
         return set({ workDoneAt: addSeconds(prevWorkDoneAt, diffTime) });
       },
       workPauseAt: null,
