@@ -1,11 +1,7 @@
-import Timer from "@/components/Timer";
-
-function App() {
+export default function App() {
   return (
     <>
-      <Timer />
+      <p>this App</p>
     </>
   );
 }
-
-export default App;

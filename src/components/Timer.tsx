@@ -11,7 +11,7 @@ import { useTimerStore } from "@/stores/useTimerStore";
 
 const INTERVAL_DELAY = 0;
 
-function Timer() {
+export default function Timer() {
   const {
     workDoneAt,
     workPauseAt,
@@ -96,5 +96,3 @@ function Timer() {
     </>
   );
 }
-
-export default Timer;
