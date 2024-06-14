@@ -8,6 +8,9 @@ import {
 import { ko } from "date-fns/locale";
 
 import { useTimerStore } from "@/stores/useTimerStore";
+import { Colors } from "@/constants/Colors";
+
+import Button from "@/components/ui/Button";
 
 const INTERVAL_DELAY = 0;
 
@@ -53,9 +56,14 @@ export default function Timer() {
 
   const workStartHandler = async () => {
     try {
-      const res = await fetch("http://localhost:8080/work/save", {
+      const res = await fetch("http://localhost:8080/work/create", {
         method: "POST",
         mode: "cors",
+        // test header
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJleHAiOjE3MTgzODI5NDAsInVzZXJJZCI6MX0.NGm29MNZCGBhRNQpI8bpilEh_n34rWnjaeNUuNDNqHo",
+        },
         body: JSON.stringify({
           start_at: new Date().toISOString(),
           company_name: "kfc",
@@ -76,22 +84,24 @@ export default function Timer() {
     <>
       <div>
         <p className="text-red-50">{remainingTimeString}</p>
-        {workDoneAt === null && (
-          <button className="btn btn-primary" onClick={workStartHandler}>
-            업무 시작
-          </button>
-        )}
-        {workDoneAt && isPause === 0 && (
-          <button className="btn btn-warning" onClick={pauseHandler}>
-            멈춤
-          </button>
-        )}
-        {workDoneAt && isPause !== 0 && (
-          <button className="btn btn-info" onClick={restartHandler}>
-            재시작
-          </button>
-        )}
-        <button onClick={reset}>clean</button>
+        <Button
+          isShow={workDoneAt === null}
+          label="일을 시작합시다"
+          onClick={workStartHandler}
+        />
+        <Button
+          isShow={workDoneAt !== null && isPause === 0}
+          label="멈춤"
+          color={Colors.warning}
+          onClick={pauseHandler}
+        />
+        <Button
+          isShow={workDoneAt !== null && isPause !== 0}
+          label="일을 시작합시다"
+          color={Colors.secondary}
+          onClick={restartHandler}
+        />
+        <Button label="다시 설정하기" color={Colors.accent} onClick={reset} />
       </div>
     </>
   );
