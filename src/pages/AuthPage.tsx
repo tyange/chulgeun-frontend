@@ -1,9 +1,5 @@
+import Box from "@/components/ui/Box";
+
 export default function AuthPage() {
-  return (
-    <div>
-      <div>1</div>
-      <div>2</div>
-      <div>3</div>
-    </div>
-  );
+  return <Box></Box>;
 }
