@@ -1,7 +1,14 @@
+import { ButtonHTMLAttributes } from "react";
 import classNames from "classnames";
 
 import { Colors } from "@/constants/Colors";
 import { Sizes } from "@/constants/Sizes";
+import { Suitability } from "@/constants/Suitability";
+
+const Width: { [Key in Suitability]: string } = {
+  [Suitability.fit]: "w-fit",
+  [Suitability.full]: "w-full",
+};
 
 const PaddingX: { [Key in Sizes]: string } = {
   [Sizes.xs]: "px-3",
@@ -17,23 +24,26 @@ const BtnColors: { [Key in Colors]: string } = {
   [Colors.success]: "btn-success",
   [Colors.warning]: "btn-warning",
   [Colors.error]: "btn-error",
+  [Colors.info]: "btn-info",
   [Colors.neutral]: "btn-neutral",
 };
 
-type ButtonProps = {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isShow?: boolean;
   label?: string;
   color?: Colors;
   size?: Sizes;
+  suitability?: Suitability;
   onClick?: () => void;
-};
+}
 
-// TODO: storybook 연결하기
 export default function Button({
+  type = "button",
   isShow = true,
   label = "Button",
   color = Colors.primary,
   size = Sizes.sm,
+  suitability = Suitability.fit,
   onClick,
 }: ButtonProps) {
   if (!isShow) {
@@ -43,13 +53,14 @@ export default function Button({
   const cName = classNames([
     "btn",
     "btn-square",
-    "w-fit",
+    "shadow-md",
+    Width[suitability],
     BtnColors[color],
     PaddingX[size],
   ]);
 
   return (
-    <button className={cName} onClick={onClick}>
+    <button type={type} className={cName} onClick={onClick}>
       {label}
     </button>
   );

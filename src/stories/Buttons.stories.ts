@@ -3,6 +3,7 @@ import { fn } from "@storybook/test";
 
 import Button from "@/components/ui/Button";
 
+import { Suitability } from "@/constants/Suitability";
 import { Sizes } from "@/constants/Sizes";
 import { Colors } from "@/constants/Colors";
 
@@ -14,6 +15,10 @@ const meta = {
   },
   tags: ["autodocs"],
   argTypes: {
+    suitability: {
+      control: "radio",
+      options: [...Object.values(Suitability)],
+    },
     color: {
       control: "radio",
       options: [...Object.values(Colors)],
