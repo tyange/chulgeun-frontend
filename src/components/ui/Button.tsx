@@ -28,6 +28,7 @@ type ButtonProps = {
   onClick?: () => void;
 };
 
+// TODO: storybook 연결하기
 export default function Button({
   isShow = true,
   label = "Button",
