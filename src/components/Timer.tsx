@@ -88,29 +88,31 @@ export default function Timer() {
   return (
     <>
       <div>
-        <p className="text-red-50">{remainingTimeString}</p>
-        <Button
-          isShow={workDoneAt === null}
-          label="일을 시작합시다"
-          onClick={workStartHandler}
-        />
-        <Button
-          isShow={workDoneAt !== null && delay === 0}
-          label="멈춤"
-          color={Colors.warning}
-          onClick={pauseHandler}
-        />
-        <Button
-          isShow={workDoneAt !== null && delay !== 0}
-          label="일을 시작합시다"
-          color={Colors.secondary}
-          onClick={restartHandler}
-        />
-        <Button
-          label="다시 설정하기"
-          color={Colors.accent}
-          onClick={resetHandler}
-        />
+        <p className="mb-5">{remainingTimeString}</p>
+        <div className="flex gap-5">
+          <Button
+            isShow={workDoneAt === null}
+            label="일을 시작합시다"
+            onClick={workStartHandler}
+          />
+          <Button
+            isShow={workDoneAt !== null && delay === 0}
+            label="멈춤"
+            color={Colors.warning}
+            onClick={pauseHandler}
+          />
+          <Button
+            isShow={workDoneAt !== null && delay !== 0}
+            label="그만 멈추기"
+            color={Colors.secondary}
+            onClick={restartHandler}
+          />
+          <Button
+            label="다시 설정하기"
+            color={Colors.accent}
+            onClick={resetHandler}
+          />
+        </div>
       </div>
     </>
   );
