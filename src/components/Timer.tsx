@@ -80,6 +80,11 @@ export default function Timer() {
     }
   };
 
+  const resetHandler = () => {
+    setDelay(null);
+    reset();
+  };
+
   return (
     <>
       <div>
@@ -101,7 +106,11 @@ export default function Timer() {
           color={Colors.secondary}
           onClick={restartHandler}
         />
-        <Button label="다시 설정하기" color={Colors.accent} onClick={reset} />
+        <Button
+          label="다시 설정하기"
+          color={Colors.accent}
+          onClick={resetHandler}
+        />
       </div>
     </>
   );
