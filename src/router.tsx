@@ -1,15 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import AuthRoute from "@/routes/AuthRoute";
-import MainRoute from "@/routes/MainRoute";
+import AuthPage from "@/pages/AuthPage";
+import MainPage from "@/pages/MainPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <AuthRoute />,
+    element: <AuthPage />,
   },
   {
     path: "/main",
-    element: <MainRoute />,
+    element: <MainPage />,
   },
 ]);

@@ -1,4 +1,4 @@
-export default function AuthRoute() {
+export default function AuthPage() {
   return (
     <div>
       <div>1</div>
