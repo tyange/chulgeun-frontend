@@ -7,7 +7,7 @@ type BoxProps = {
 
 export default function Box({ comingSoon = false, children }: BoxProps) {
   return (
-    <div className="rounded-lg bg-white bg-opacity-90 p-10 text-black">
+    <div className="flex items-center justify-center rounded-lg bg-white bg-opacity-90 p-10 text-black">
       {comingSoon ? "Coming Soon!" : children}
     </div>
   );
