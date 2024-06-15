@@ -7,7 +7,7 @@ const PaddingX: { [Key in Sizes]: string } = {
   [Sizes.xs]: "px-3",
   [Sizes.sm]: "px-5",
   [Sizes.md]: "px-10",
-  [Sizes.lg]: "px-15",
+  [Sizes.lg]: "px-14",
 };
 
 const BtnColors: { [Key in Colors]: string } = {

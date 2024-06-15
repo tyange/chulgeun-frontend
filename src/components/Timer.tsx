@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useInterval } from "usehooks-ts";
 import {
   addHours,
@@ -15,16 +16,15 @@ import Button from "@/components/ui/Button";
 const INTERVAL_DELAY = 0;
 
 export default function Timer() {
+  const [delay, setDelay] = useState<null | number>(null); // delay가 null 경우 removeInterval 됌.
   const {
     workDoneAt,
     workPauseAt,
     remainingTimeString,
-    isPause,
     setWorkDoneAt,
     addWorkDoneAt,
     setWorkPauseAt,
     setRemainingTimeString,
-    setPause,
     reset,
   } = useTimerStore();
 
@@ -36,11 +36,11 @@ export default function Timer() {
     const diff = intervalToDuration({ start: new Date(), end: workDoneAt });
 
     setRemainingTimeString(formatDuration(diff, { zero: true, locale: ko }));
-  }, isPause);
+  }, delay);
 
   const pauseHandler = () => {
     setWorkPauseAt(new Date());
-    setPause(null);
+    setDelay(null);
   };
 
   const restartHandler = () => {
@@ -51,7 +51,7 @@ export default function Timer() {
     const diffTime = differenceInSeconds(new Date(), workPauseAt);
     addWorkDoneAt(diffTime);
 
-    setPause(INTERVAL_DELAY);
+    setDelay(INTERVAL_DELAY);
   };
 
   const workStartHandler = async () => {
@@ -62,7 +62,7 @@ export default function Timer() {
         // test header
         headers: {
           Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJleHAiOjE3MTgzODI5NDAsInVzZXJJZCI6MX0.NGm29MNZCGBhRNQpI8bpilEh_n34rWnjaeNUuNDNqHo",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJleHAiOjE3MTg0MjI2NjMsInVzZXJJZCI6MX0.ncDC5_LJ3Erih0R6UabLEuxkGOb96y3QNNiJ9VDDiIc",
         },
         body: JSON.stringify({
           start_at: new Date().toISOString(),
@@ -74,7 +74,7 @@ export default function Timer() {
       const startAt = data.work["start_at"];
 
       setWorkDoneAt(addHours(new Date(startAt), 9));
-      setPause(INTERVAL_DELAY);
+      setDelay(INTERVAL_DELAY);
     } catch (err) {
       console.log(err);
     }
@@ -90,13 +90,13 @@ export default function Timer() {
           onClick={workStartHandler}
         />
         <Button
-          isShow={workDoneAt !== null && isPause === 0}
+          isShow={workDoneAt !== null && delay === 0}
           label="멈춤"
           color={Colors.warning}
           onClick={pauseHandler}
         />
         <Button
-          isShow={workDoneAt !== null && isPause !== 0}
+          isShow={workDoneAt !== null && delay !== 0}
           label="일을 시작합시다"
           color={Colors.secondary}
           onClick={restartHandler}
