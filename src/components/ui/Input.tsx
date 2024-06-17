@@ -13,10 +13,10 @@ export default function Input({
   register,
 }: InputProps) {
   return (
-    <label className="input input-bordered flex items-center gap-2 bg-zinc-300 shadow-md">
+    <label className="input input-bordered flex items-center gap-2 bg-zinc-300 text-gray-500 shadow-md">
       {label}
       <input
-        className="grow"
+        className="grow text-black"
         type={type}
         autoComplete={autoComplete}
         {...register}

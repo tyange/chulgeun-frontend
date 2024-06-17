@@ -21,8 +21,13 @@ const Template: StoryFn = (args) => {
 export default meta;
 
 export const Text = Template.bind({});
-
 Text.args = {
   type: "text",
   label: "TEST",
+};
+
+export const Password = Template.bind({});
+Password.args = {
+  type: "password",
+  label: "PW",
 };
