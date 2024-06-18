@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useInterval } from "usehooks-ts";
+import axios from "axios";
 import {
   addHours,
   intervalToDuration,
@@ -56,21 +57,21 @@ export default function Timer() {
 
   const workStartHandler = async () => {
     try {
-      const res = await fetch("http://localhost:8080/work/create", {
-        method: "POST",
-        mode: "cors",
-        // test header
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJleHAiOjE3MTg0MjI2NjMsInVzZXJJZCI6MX0.ncDC5_LJ3Erih0R6UabLEuxkGOb96y3QNNiJ9VDDiIc",
-        },
-        body: JSON.stringify({
+      const res = await axios.post(
+        "http://localhost:8080/work/create",
+        {
           start_at: new Date().toISOString(),
           company_name: "kfc",
-        }),
-      });
+        },
+        {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJleHAiOjE3MTg0MjI2NjMsInVzZXJJZCI6MX0.ncDC5_LJ3Erih0R6UabLEuxkGOb96y3QNNiJ9VDDiIc",
+          },
+        },
+      );
 
-      const data = await res.json();
+      const data = await res.data;
       const startAt = data.work["start_at"];
 
       setWorkDoneAt(addHours(new Date(startAt), 9));
