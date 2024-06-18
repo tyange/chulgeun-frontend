@@ -12,7 +12,9 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.45.1",
     "autoprefixer": "^10.4.19",
+    "axios": "^1.7.2",
     "classnames": "^2.5.1",
     "daisyui": "^4.12.2",
     "date-fns": "^3.6.0",
@@ -24,6 +26,7 @@
     "react-hook-form": "^7.51.5",
     "react-router-dom": "^6.23.1",
     "tailwindcss": "^3.4.4",
+    "ts-pattern": "^5.2.0",
     "usehooks-ts": "^3.1.0",
     "vite-tsconfig-paths": "^4.3.2",
     "zustand": "^4.5.2"
