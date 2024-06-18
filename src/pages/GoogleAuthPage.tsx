@@ -14,7 +14,8 @@ export default function GoogleAuthPage() {
   const mutation = useMutation({
     mutationFn: (c: string) =>
       axios.post("http://localhost:8080/auth/google", { code: c }),
-    onError: () => console.log("hi"),
+    // TODO: 성공일 때의 처리
+    // TODO: 에러 발생했을 때의 처리 (code가 만료됐을 경우, 실제 네트워크 오류인 경우를 분리)
   });
 
   useEffect(() => {
