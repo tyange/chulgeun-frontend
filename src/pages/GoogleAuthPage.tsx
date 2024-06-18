@@ -1,42 +1,40 @@
-import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { match } from "ts-pattern";
+import axios from "axios";
 
 import Box from "@/components/ui/Box";
+import { useEffect } from "react";
 
 export default function GoogleAuthPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const code = searchParams.get("code");
 
-  const runOnlyOnce = useRef(false);
-
-  const postCode = async () => {
-    try {
-      const res = await fetch("http://localhost:8080/auth/google", {
-        method: "POST",
-        body: JSON.stringify({ code }),
-      });
-      const data = await res.json();
-
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-      console.error("구글 인증 코드를 보내는데 실패했습니다.");
-    }
-  };
+  const mutation = useMutation({
+    mutationFn: (c: string) =>
+      axios.post("http://localhost:8080/auth/google", { code: c }),
+    onError: () => console.log("hi"),
+  });
 
   useEffect(() => {
-    if (!runOnlyOnce.current) {
-      postCode();
+    if (code) {
+      mutation.mutate(code);
     }
-
-    return () => {
-      runOnlyOnce.current = true;
-    };
   }, []);
+
   return (
     <Box>
-      <p>구글 로그인을 시도하는 중입니다...</p>
+      <p>
+        {match(mutation)
+          .with({ status: "pending" }, () => "구글 로그인을 시도하는 중입니다.")
+          .with({ status: "error" }, () => "구글 로그인에 실패했습니다.")
+          .with(
+            { status: "success" },
+            () => "구글 로그인에 성공했습니다. 페이지를 벗어납니다.",
+          )
+          .otherwise(() => "")}
+      </p>
     </Box>
   );
 }
